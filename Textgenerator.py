@@ -3,21 +3,19 @@ import os.path
 
 media = os.path.join(os.path.abspath("."), u'GUI')
 
-class HelloWorld(object):
+class HtmlText(object):
 
     def index(self):
         return open(os.path.join(media, u'HtmlTextgenerator.html'))
     index.exposed = True
 
-    def start(self, text=None, length=None):
-        print(text)
+    def start(self, textFromHtml=None, length=None):
+        print(textFromHtml)
         return
     start.exposed = True
 
-class Markov(object):
-
-    def getText(self):
+class AnalyseText(object):
 
 
 configfile = os.path.join(os.path.dirname(__file__),'serv.conf')
-cherrypy.quickstart(HelloWorld(),config=configfile)
+cherrypy.quickstart(HtmlText(),config=configfile)
