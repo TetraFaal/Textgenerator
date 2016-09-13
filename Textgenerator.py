@@ -1,6 +1,6 @@
 import cherrypy
 import os.path
-from random import randint
+import random
 
 
 media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenant les fichiers html
@@ -17,30 +17,35 @@ class TextGenerator:
         analyzer = Analyze(textFromHtml) #Pour pouvoir utiliser dans l'autre class (objets)
         stateList = analyzer.getStructuredData()
         #self.printStateList(stateList) #Controle qui a foiré
-        makrov = MakrovGenerator()
-        print(makrov.generateSentence(stateList))
+        markov = MarkovGenerator()
+        print(markov.generateSentence(stateList))
     start.exposed = True # ??? CherryPy
 
     def printStateList(self, list):
         for i in range(0, len(list)):
             print(list[i].value)
 
-class MakrovGenerator:
+class MarkovGenerator:
 
     def generateSentence(self, list):
 
         output = ''
-        counter = 1
-        length = 5
+        currentState = None
 
-        for i in range(0, length):
-            tempList = []
-            for entry in list:
-                if(entry.index == counter):
-                    tempList.append(entry)
-            if(len(tempList) > 0):
-                output += self.getRandomString(tempList) + " "
-            counter += 1
+        for state in list:
+            if state.value == 'SENTENCE_START':
+                currentState = state
+                break
+
+        while currentState.value != 'SENTENCE_END':
+            nextWord = random.choice(currentState.nextPossibilities)
+            print(nextWord)
+            output += nextWord
+            for state in list:
+                if state.value == nextWord:
+                    currentState = state
+                    break
+
 
         return output
 
@@ -53,40 +58,36 @@ class MakrovGenerator:
 
 class Analyze:
 
-    text ='' #première definition de la variable text
+    textToAnalyze = '' #première definition de la variable textToAnalize
 
     def __init__(self, text): #initialise Analyze
-        self.text = text
+        self.textToAnalyze = text #définit la variable textToAnalize comme égale à la variable text
 
     def getStructuredData(self): #Fonction qui sépare les phrases et ensuite les mots
-        sentenceList = self.text.split('. ') #sépart les phrases
-        wordList = []
-        returnList = [] #State shit
-        for i in range(0, len(sentenceList)):
-            l = sentenceList[i].split(' ') #sépare les mots
-            for entry in l:
-                wordList.append(entry)
-        for entry in wordList:
-            for e in returnList:
-                if(entry == e.value):
-                    list = e.nextPossibilities
-                    list.append(wordList[wordList.index(entry) + 1])
-                    returnList[returnList.index(e)] = State(entry.value, list)
-                else:
-                    list = []
-                    list.append(wordList[wordList.index(entry) + 1])
-                    returnList.append(State(entry, list))
+        sentenceList = self.textToAnalyze.split('. ') #sépart les phrases du texte textToAnalize
 
-            if(len(returnList) == 0):
-                list = []
-                list.append(wordList[wordList.index(entry) + 1])
-                returnList.append(State(entry, list))
+        stateList = [] #State shit
 
-        return returnList
+        for sentence in sentenceList:
+            wordList = ['SENTENCE_START']
+            words = sentence.split(' ')
+            wordList.append(words)
+            wordList.append('SENTENCE_END')
+
+            for entry in wordList:
+                if entry != 'SENTENCE_END':
+                    existingState = next((state for state in stateList if state.value == entry), State(entry, []))
+
+                    existingState.nextPossibilities.append(wordList[wordList.index(entry) + 1]))
+
+                    if existingState not in stateList:
+                        stateList.append(existingState)
+
+        return stateList
 
 class State:
 
-    value =''
+    value = ''
     nextPossibilities = []
 
     def __init__(self, v, n):
