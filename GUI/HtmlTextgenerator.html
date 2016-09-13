@@ -4,7 +4,7 @@
 	<head>
 		<title>Textgenerator</title>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="bootstrap.css">
+		<link rel="stylesheet" href="bootstrap.css"> <!--Enlever le bootstrapTG/css/ pour python -->
 		<link rel="stylesheet" href="CssTextgenerator.css"> 
 	</head>
 	
@@ -13,18 +13,21 @@
 		<script src="bootstrapTG/js/jquery.min.js"></script>
 		<script src="bootstrapTG/js/bootstrap.min.js"></script>
 		<script src="JsTextgenerator.js"></script>
-	
+		
 		<div class="container">
 			<h1>Textgenerator</h1>
 			<form action="start">
 				<div class="form-group">
 					<label>Text input:</label>
-						<input type="text" class="form-control" id="text" placeholder="Yeah" name="textFromHtml">
+						<textarea class="form-control" rows="8" id="text" placeholder="Please copy paste your phrases in here..." name="textFromHtml"></textarea>
 				</div>
 				<button type="submit" class="btn btn-default">Submit</button>
 			</form>
 			
-			<p id="showText"></p>
+		<p>Markov created these sentences : </p>
+		<br>
+		<p id="demo"></p>
+			
 			
 		</div>
 		
