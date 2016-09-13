@@ -1,7 +1,7 @@
 import cherrypy
 import os.path
 import random
-
+from itertools import chain
 
 media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenant les fichiers html
 
@@ -18,7 +18,8 @@ class TextGenerator:
         stateList = analyzer.getStructuredData()
         #self.printStateList(stateList) #Controle qui a foiré
         markov = MarkovGenerator()
-        print(markov.generateSentence(stateList))
+        output = markov.generateSentence(stateList)
+        print(output)
     start.exposed = True # ??? CherryPy
 
     def printStateList(self, list):
@@ -31,30 +32,23 @@ class MarkovGenerator:
 
         output = ''
         currentState = None
+        counter = 0
 
         for state in list:
             if state.value == 'SENTENCE_START':
                 currentState = state
                 break
 
-        while currentState.value != 'SENTENCE_END':
+        while currentState.value != 'SENTENCE_END' and counter <= 10:
             nextWord = random.choice(currentState.nextPossibilities)
-            print(nextWord)
-            output += nextWord
             for state in list:
                 if state.value == nextWord:
                     currentState = state
+                    output += " " + currentState.value
+                    counter += 1
                     break
 
-
-        return output
-
-
-
-    def getRandomString(self, l):
-        rndNumber = randint(0, len(l))
-        return l[rndNumber].value
-
+        return output + '. '
 
 class Analyze:
 
@@ -71,14 +65,14 @@ class Analyze:
         for sentence in sentenceList:
             wordList = ['SENTENCE_START']
             words = sentence.split(' ')
-            wordList.append(words)
+            wordList += words
             wordList.append('SENTENCE_END')
 
             for entry in wordList:
-                if entry != 'SENTENCE_END':
+                if entry != 'SENTENCE_END' and entry != ' ':
                     existingState = next((state for state in stateList if state.value == entry), State(entry, []))
 
-                    existingState.nextPossibilities.append(wordList[wordList.index(entry) + 1]))
+                    existingState.nextPossibilities.append(wordList[wordList.index(entry) + 1])
 
                     if existingState not in stateList:
                         stateList.append(existingState)
