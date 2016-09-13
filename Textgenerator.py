@@ -41,7 +41,7 @@ class MarkovGenerator:
                 currentState = state
                 break
 
-        while currentState.value != 'SENTENCE_END' and counter <= 10:
+        while currentState.value != 'SENTENCE_END' and counter <= 15:
             nextWord = random.choice(currentState.nextPossibilities)
             for state in list:
                 if state.value == nextWord:
