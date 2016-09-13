@@ -1,7 +1,6 @@
 import cherrypy
 import os.path
 import random
-from itertools import chain
 
 media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenant les fichiers html
 
@@ -17,16 +16,15 @@ class TextGenerator:
     def start(self, textFromHtml=None, length=None): #Fonction se lance après avoir cliquer sur Submit dans le navigateur
         analyzer = Analyze(textFromHtml) #Pour pouvoir utiliser dans l'autre class (objets)
         stateList = analyzer.getStructuredData()
-        #self.printStateList(stateList) #Controle qui a foiré
         markov = MarkovGenerator()
+        finalText = []
         for i in range (0, self.number):
             output = markov.generateSentence(stateList)
             print(output)
+            finalText.append(output)
+        return finalText
     start.exposed = True # ??? CherryPy
 
-    def printStateList(self, list):
-        for i in range(0, len(list)):
-            print(list[i].value)
 
 class MarkovGenerator:
 
@@ -36,12 +34,15 @@ class MarkovGenerator:
         currentState = None
         counter = 0
 
+        values =[]
+
         for state in list:
             if state.value == 'SENTENCE_START':
                 currentState = state
                 break
 
-        while currentState.value != 'SENTENCE_END' and counter <= 15:
+        nextWord = ''
+        while nextWord != 'SENTENCE_END' and counter <= 10:
             nextWord = random.choice(currentState.nextPossibilities)
             for state in list:
                 if state.value == nextWord:
@@ -73,8 +74,9 @@ class Analyze:
             for entry in wordList:
                 if entry != 'SENTENCE_END' and entry != ' ':
                     existingState = next((state for state in stateList if state.value == entry), State(entry, []))
-
-                    existingState.nextPossibilities.append(wordList[wordList.index(entry) + 1])
+                    possibilityToAdd = wordList[wordList.index(entry) + 1]
+                    if possibilityToAdd != ' ':
+                        existingState.nextPossibilities.append(possibilityToAdd)
 
                     if existingState not in stateList:
                         stateList.append(existingState)
