@@ -8,6 +8,7 @@ media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenan
 class TextGenerator:
 
     stateList = []
+    number = 10
 
     def index(self):
         return open(os.path.join(media, u'HtmlTextgenerator.html')) #Html ouvert dans le navigateur
@@ -18,8 +19,9 @@ class TextGenerator:
         stateList = analyzer.getStructuredData()
         #self.printStateList(stateList) #Controle qui a foiré
         markov = MarkovGenerator()
-        output = markov.generateSentence(stateList)
-        print(output)
+        for i in range (0, self.number):
+            output = markov.generateSentence(stateList)
+            print(output)
     start.exposed = True # ??? CherryPy
 
     def printStateList(self, list):
