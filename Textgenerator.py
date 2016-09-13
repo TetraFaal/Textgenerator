@@ -7,7 +7,7 @@ media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenan
 class TextGenerator:
 
     stateList = []
-    number = 10
+    number = 30
 
     def index(self):
         return open(os.path.join(media, u'HtmlTextgenerator.html')) #Html ouvert dans le navigateur
@@ -42,7 +42,7 @@ class MarkovGenerator:
                 break
 
         nextWord = ''
-        while nextWord != 'SENTENCE_END' and counter <= 10:
+        while nextWord != 'SENTENCE_END' and counter <= random.randint(10,20):
             nextWord = random.choice(currentState.nextPossibilities)
             for state in list:
                 if state.value == nextWord:
@@ -62,7 +62,10 @@ class Analyze:
 
     def getStructuredData(self): #Fonction qui sépare les phrases et ensuite les mots
         sentenceList = self.textToAnalyze.split('. ') #sépart les phrases du texte textToAnalize
-
+        sentenceList = [w.replace('."', '. ') for w in sentenceList]
+        sentenceList = [w.replace('"', '') for w in sentenceList]
+        sentenceList = [w.replace(',. ', '. ') for w in sentenceList]
+        sentenceList = [w.replace(':. ', ': ') for w in sentenceList]
         stateList = [] #State shit
 
         for sentence in sentenceList:
