@@ -16,20 +16,18 @@
 		
 		<div class="container">
 			<h1>Textgenerator</h1>
-			<form action="start" target="_blank">
+			<form action="start">
 				<div class="form-group">
 					<label>Text input:</label>
 						<textarea class="form-control" rows="8" id="text" placeholder="Please copy paste your phrases in here..." name="textFromHtml"></textarea>
-						<!-- <input class="form-control" placeholder="Please chose how many sentence you want to be generated" name="lenght"></input> -->
 				</div>
-				<button type="submit" class="btn btn-default" onclick="FbuttonGenerate(event)">Submit</button>
+				<button type="submit" class="btn btn-default">Submit</button>
 			</form>
 			
-			<p>Markov created these sentences : </p>
-			<br>
-			<div id="result">
+		<p>Markov created these sentences : </p>
+		<br>
+		<p id="demo"></p>
 			
-			</div>
 			
 		</div>
 		
