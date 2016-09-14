@@ -4,7 +4,7 @@ function FbuttonGenerate(event){
 	var textInput = document.getElementsByName("textFromHtml")[0].value;
 	var lengthInput = document.getElementsByName("lenght")[0].value; 
 	
-	fetch('http://127.0.0.1:8080/start?textFromHtml=' + encodeURIComponent(textInput))
+	fetch('http://127.0.0.1:8080/start?textFromHtml=' + encodeURIComponent(textInput) + '&length=' + lengthInput)
     .then(function(response) {
 		response.json().then(function (json){
 			
@@ -14,8 +14,8 @@ function FbuttonGenerate(event){
 				// }
 
 			console.debug(json);
+			console.debug(lengthInput)
 			document.getElementById('result').innerHTML=json;
-			document.getElementById('length').innerHTML=lengthInput;
 		})        
     })
 }
