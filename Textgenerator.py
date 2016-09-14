@@ -1,6 +1,8 @@
 import cherrypy
 import os.path
 import random
+import re
+import json
 
 media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenant les fichiers html
 
@@ -22,7 +24,16 @@ class TextGenerator:
             output = markov.generateSentence(stateList)
             print(output)
             finalText.append(output)
-        return finalText
+        ''.join(finalText)
+        finalText = re.sub("\'\,\'", '', finalText)
+        finalText = re.sub("\[\d+\]", '', finalText)
+        finalText = re.sub("\?", '', finalText)
+        finalText = re.sub('\.\"', '. ', finalText)
+        finalText = re.sub("\"", '', finalText)
+        finalText = re.sub("\,\.", '.', finalText)
+        finalText = re.sub("\.", '.', finalText)
+        finalText = re.sub("\.\s\.", '.', finalText)
+        return json.dump(finalText)
     start.exposed = True # ??? CherryPy
 
 
@@ -62,10 +73,6 @@ class Analyze:
 
     def getStructuredData(self): #Fonction qui sépare les phrases et ensuite les mots
         sentenceList = self.textToAnalyze.split('. ') #sépart les phrases du texte textToAnalize
-        sentenceList = [w.replace('."', '. ') for w in sentenceList]
-        sentenceList = [w.replace('"', '') for w in sentenceList]
-        sentenceList = [w.replace(',. ', '. ') for w in sentenceList]
-        sentenceList = [w.replace(':. ', ': ') for w in sentenceList]
         stateList = [] #State shit
 
         for sentence in sentenceList:
