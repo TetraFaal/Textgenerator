@@ -7,18 +7,18 @@ media = os.path.join(os.path.abspath("."), u'GUI') #Chemin au documnets contenan
 class TextGenerator:
 
     stateList = []
-    number = 30
+    textLength = 30
 
     def index(self):
         return open(os.path.join(media, u'HtmlTextgenerator.html')) #Html ouvert dans le navigateur
     index.exposed = True # ??? CherryPy
 
-    def start(self, textFromHtml=None, length=None): #Fonction se lance après avoir cliquer sur Submit dans le navigateur
+    def start(self, textFromHtml=None, length=30): #Fonction se lance après avoir cliquer sur Submit dans le navigateur
         analyzer = Analyze(textFromHtml) #Pour pouvoir utiliser dans l'autre class (objets)
         stateList = analyzer.getStructuredData()
         markov = MarkovGenerator()
         finalText = []
-        for i in range (0, self.number):
+        for i in range (0, length):
             output = markov.generateSentence(stateList)
             print(output)
             finalText.append(output)
