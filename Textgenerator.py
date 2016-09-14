@@ -30,9 +30,9 @@ class TextGenerator:
         finalText = re.sub("\?", '', finalText)
         finalText = re.sub('\.\"', '. ', finalText)
         finalText = re.sub("\"", '', finalText)
-        finalText = re.sub("\,\.", '.', finalText)
-        finalText = re.sub("\.", '.', finalText)
-        finalText = re.sub("\.\s\.", '.', finalText)
+        finalText = re.sub("\,\.", '. ', finalText)
+        finalText = re.sub("\. .", '. ', finalText)
+        finalText = re.sub("\.\.", '. ', finalText)
         return json.dumps(finalText)
     start.exposed = True # ??? CherryPy
 
@@ -61,7 +61,6 @@ class MarkovGenerator:
                     output += " " + currentState.value
                     counter += 1
                     break
-
         return output + '. '
 
 class Analyze:
