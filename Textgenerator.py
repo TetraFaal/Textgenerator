@@ -24,8 +24,8 @@ class TextGenerator:
             output = markov.generateSentence(stateList)
             print(output)
             finalText.append(output)
-        ''.join(finalText)
-        finalText = re.sub("\'\,\'", '', finalText)
+        finalText = ''.join(finalText)
+        finalText = re.sub("\',\'", '', finalText)
         finalText = re.sub("\[\d+\]", '', finalText)
         finalText = re.sub("\?", '', finalText)
         finalText = re.sub('\.\"', '. ', finalText)
@@ -33,7 +33,7 @@ class TextGenerator:
         finalText = re.sub("\,\.", '.', finalText)
         finalText = re.sub("\.", '.', finalText)
         finalText = re.sub("\.\s\.", '.', finalText)
-        return json.dump(finalText)
+        return json.dumps(finalText)
     start.exposed = True # ??? CherryPy
 
 
